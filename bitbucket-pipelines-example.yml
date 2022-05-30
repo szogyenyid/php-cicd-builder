@@ -1,0 +1,86 @@
+image: dotsunited/git-ftp
+pipelines:
+  custom: # Pipelines that are triggered manually via the Bitbucket GUI
+    migrate: # -- Migrates from Test to Live environment
+      - step:
+        script:
+          - apk update && apk upgrade
+          - apk add openssh nodejs
+          - npm install uglify-js -g
+          - for f in $(find * -maxdepth 30 -type f -name '*.js' -and -not -name '*.min.js'); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done
+          - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/' -f2)
+          - git status -uno --porcelain
+          - cat .git-ftp-include
+          - git submodule update --init --recursive
+          # UNNECESSARY: - git submodule foreach 'echo y | git ftp push --auto-init --force -u $FTP_USERNAME -p $FTP_PASSWORD ftp://$FTP_HOST/spartafy.hu/spartafy/$(basename `git rev-parse --show-toplevel`)/'
+          - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafy.hu/spartafy/    
+  branches: # Automated triggers on commits to branches
+    feature/*:
+      - step:
+          name: Deploying to server
+          script:
+            - apk update && apk upgrade
+            - apk add openssh nodejs
+            - npm install uglify-js -g
+            - for f in $(find * -maxdepth 30 -type f -name '*.js' -and -not -name '*.min.js'); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done
+            - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/' -f2)
+            - git status -uno --porcelain
+            - cat .git-ftp-include
+            - git submodule update --init --recursive
+            - git submodule foreach 'echo y | git ftp push --auto-init -u $FTP_USERNAME -p $FTP_PASSWORD ftp://$FTP_HOST/spartafyfeature/${featureBranchName}/spartafy/$(basename `git rev-parse --show-toplevel`)/'
+            - echo "y" | git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyfeature/${featureBranchName}/spartafy/
+    hotfix:
+      - step:
+          name: Deploying to server
+          script:
+            - apk update && apk upgrade
+            - apk add openssh nodejs
+            - npm install uglify-js -g
+            - for f in $(find * -maxdepth 30 -type f -name '*.js' -and -not -name '*.min.js'); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done
+            - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/' -f2)
+            - git status -uno --porcelain
+            - cat .git-ftp-include
+            - git submodule update --init --recursive
+            - git submodule foreach 'echo y | git ftp push --auto-init -u $FTP_USERNAME -p $FTP_PASSWORD ftp://$FTP_HOST/spartafyhotfix/spartafy/$(basename `git rev-parse --show-toplevel`)/'
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyhotfix/spartafy/
+    development:
+    - step:
+          name: Deploying to server
+          script:
+            - apk update && apk upgrade
+            - apk add openssh nodejs
+            - npm install uglify-js -g
+            - for f in $(find * -maxdepth 30 -type f -name '*.js' -and -not -name '*.min.js'); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done
+            - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/' -f2)
+            - git status -uno --porcelain
+            - cat .git-ftp-include
+            - git submodule update --init --recursive
+            - git submodule foreach 'echo y | git ftp push --auto-init -u $FTP_USERNAME -p $FTP_PASSWORD ftp://$FTP_HOST/spartafydevelopment/spartafy/$(basename `git rev-parse --show-toplevel`)/'
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafydevelopment/spartafy/
+    test:
+    - step:
+          name: Deploying to server
+          script:
+            - apk update && apk upgrade
+            - apk add openssh nodejs
+            - npm install uglify-js -g
+            - for f in $(find * -maxdepth 30 -type f -name '*.js' -and -not -name '*.min.js'); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done
+            - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/' -f2)
+            - git status -uno --porcelain
+            - cat .git-ftp-include
+            - git submodule update --init --recursive
+            - git submodule foreach 'echo y | git ftp push --auto-init -u $FTP_USERNAME -p $FTP_PASSWORD ftp://$FTP_HOST/spartafytest/spartafy/$(basename `git rev-parse --show-toplevel`)/'
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafytest/spartafy/
+    master: # -- Force pushes to preprod
+    - step:
+        script:
+          - apk update && apk upgrade
+          - apk add openssh nodejs
+          - npm install uglify-js -g
+          - for f in $(find * -maxdepth 30 -type f -name '*.js' -and -not -name '*.min.js'); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done
+          - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/' -f2)
+          - git status -uno --porcelain
+          - cat .git-ftp-include
+          - git submodule update --init --recursive
+          - git submodule foreach 'echo y | git ftp push --auto-init --force -u $FTP_USERNAME -p $FTP_PASSWORD ftp://$FTP_HOST/spartafypreprod/$(basename `git rev-parse --show-toplevel`)/'
+          - git ftp push --auto-init --force -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafypreprod/    

@@ -1,0 +1,133 @@
+image: 'alpine:latest'
+pipelines:
+  custom:
+    migrate:
+      - step:
+          name: 'Unit tests'
+          script:
+            - apk update && apk upgrade
+            - wget https://phar.phpunit.de/phpunit-9.5.phar
+            - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
+      - step:
+          name: 'Static Analysis & Coding standards'
+          script:
+            - apk update && apk upgrade
+            - apk add php8 php8-phar php8-json php8-tokenizer php8-ctype php8-mbstring php8-xmlwriter php8-simplexml
+            - for file in $(find src -type f -name "*.php"); do php -l $file; done
+            - wget https://github.com/phpstan/phpstan/releases/download/1.2.0/phpstan.phar
+            - php phpstan.phar --no-progress --memory-limit=1G --level=1 analyse src
+            - wget https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+            - php phpcs.phar -s --report=summary --extensions=php --standard=PSR12 src
+      - step:
+          name: 'Compile and Deploy'
+          script:
+            - apk update && apk upgrade
+            - apk add nodejs npm bash curl git make openssh
+            - npm install uglify-js -g
+            - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
+            - npm install -g sass
+            - sass --update assets:public --style=compressed
+            - echo "!/public/" >> .git-ftp-include;
+            - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
+            - git submodule update --init --recursive
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafy.hu/spartafy/
+  branch:
+    'feature/*':
+      - step:
+          name: 'Unit tests'
+          script:
+            - apk update && apk upgrade
+            - wget https://phar.phpunit.de/phpunit-9.5.phar
+            - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
+      - step:
+          name: 'Compile and Deploy'
+          script:
+            - apk update && apk upgrade
+            - apk add nodejs npm bash curl git make openssh
+            - npm install uglify-js -g
+            - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
+            - npm install -g sass
+            - sass --update assets:public --style=compressed
+            - echo "!/public/" >> .git-ftp-include;
+            - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
+            - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/'' -f2)'
+            - git submodule update --init --recursive
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyfeature/${featureBranchName}/
+    hotfix:
+      - step:
+          name: 'Unit tests'
+          script:
+            - apk update && apk upgrade
+            - wget https://phar.phpunit.de/phpunit-9.5.phar
+            - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
+      - step:
+          name: 'Static Analysis & Coding standards'
+          script:
+            - apk update && apk upgrade
+            - apk add php8 php8-phar php8-json php8-tokenizer php8-ctype php8-mbstring php8-xmlwriter php8-simplexml
+            - for file in $(find src -type f -name "*.php"); do php -l $file; done
+            - wget https://github.com/phpstan/phpstan/releases/download/1.2.0/phpstan.phar
+            - php phpstan.phar --no-progress --memory-limit=1G --level=1 analyse src
+            - wget https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+            - php phpcs.phar -s --report=summary --extensions=php --standard=PSR12 src
+      - step:
+          name: 'Compile and Deploy'
+          script:
+            - apk update && apk upgrade
+            - apk add nodejs npm bash curl git make openssh
+            - npm install uglify-js -g
+            - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
+            - npm install -g sass
+            - sass --update assets:public --style=compressed
+            - echo "!/public/" >> .git-ftp-include;
+            - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
+            - git submodule update --init --recursive
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyhotfix/
+    master:
+      - step:
+          name: 'Unit tests'
+          script:
+            - apk update && apk upgrade
+            - wget https://phar.phpunit.de/phpunit-9.5.phar
+            - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
+      - step:
+          name: 'Static Analysis & Coding standards'
+          script:
+            - apk update && apk upgrade
+            - apk add php8 php8-phar php8-json php8-tokenizer php8-ctype php8-mbstring php8-xmlwriter php8-simplexml
+            - for file in $(find src -type f -name "*.php"); do php -l $file; done
+            - wget https://github.com/phpstan/phpstan/releases/download/1.2.0/phpstan.phar
+            - php phpstan.phar --no-progress --memory-limit=1G --level=1 analyse src
+            - wget https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+            - php phpcs.phar -s --report=summary --extensions=php --standard=PSR12 src
+      - step:
+          name: 'Compile and Deploy'
+          script:
+            - apk update && apk upgrade
+            - apk add nodejs npm bash curl git make openssh
+            - npm install uglify-js -g
+            - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
+            - npm install -g sass
+            - sass --update assets:public --style=compressed
+            - echo "!/public/" >> .git-ftp-include;
+            - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
+            - git submodule update --init --recursive
+            - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafypreprod/
+  pull-requests:
+    '**':
+      - step:
+          name: 'Unit tests'
+          script:
+            - apk update && apk upgrade
+            - wget https://phar.phpunit.de/phpunit-9.5.phar
+            - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
+      - step:
+          name: 'Static Analysis & Coding standards'
+          script:
+            - apk update && apk upgrade
+            - apk add php8 php8-phar php8-json php8-tokenizer php8-ctype php8-mbstring php8-xmlwriter php8-simplexml
+            - for file in $(find src -type f -name "*.php"); do php -l $file; done
+            - wget https://github.com/phpstan/phpstan/releases/download/1.2.0/phpstan.phar
+            - php phpstan.phar --no-progress --memory-limit=1G --level=1 analyse src
+            - wget https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+            - php phpcs.phar -s --report=summary --extensions=php --standard=PSR12 src
