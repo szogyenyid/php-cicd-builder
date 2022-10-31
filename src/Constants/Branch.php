@@ -8,5 +8,5 @@ class Branch
     public const DEVELOPMENT = 'development';
     public const FEATURE = 'feature/*';
     public const HOTFIX = 'hotfix';
-    public const DEFAULT = '**';
+    public const ANY = '**';
 }
