@@ -29,6 +29,17 @@ final class CICD
         $this->pipelines[$trigger][$pipeline->getName()] = $pipeline->asArray();
         return $this;
     }
+    public function withPipelines(string $trigger, ...$pipelines): CICD
+    {
+        foreach ($pipelines as $pl) {
+            if ($pl instanceof Pipeline) {
+                $this->withPipeline($trigger, $pl);
+            } else {
+                throw new \Exception("CICD::withPipelines parameters must be Pipeline instances.");
+            }
+        }
+        return $this;
+    }
     public function withInitScript(Script $script): CICD
     {
         $this->initScripts[] = $script;
