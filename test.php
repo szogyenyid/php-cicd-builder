@@ -44,7 +44,7 @@ $compileAndDeploy = function (...$params): Step {
 
 # --- Build the CI/CD process from this point ---
 
-$cicd = (new CICD("alpine:latest"))
+(new CICD("alpine:latest"))
     ->withInitScript(Script::simple("apk update && apk upgrade"))
     ->withPipeline(
         Trigger::CUSTOM,
