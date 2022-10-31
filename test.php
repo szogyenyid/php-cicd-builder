@@ -14,8 +14,15 @@ use Soegaeni\PhpCicdBuilder\Constants\Trigger;
 use Soegaeni\PhpCicdBuilder\Pipeline;
 use Soegaeni\PhpCicdBuilder\Script;
 use Soegaeni\PhpCicdBuilder\Step;
+use Soegaeni\PhpCicdBuilder\Variables;
 
 include 'vendor/autoload.php';
+
+# --- Variables ---
+
+$environments = (new Variables("Environment"))
+    ->withDefault("spartafyapp/")
+    ->withAllowedValues(["spartafyapp/", "spartafyfeature/", "spartafyhotfix/", "spartafypreprod/"]);
 
 # --- Default steps ---
 
@@ -41,24 +48,25 @@ $cicd = (new CICD("alpine:latest"))
     ->withInitScript(Script::simple("apk update && apk upgrade"))
     ->withPipeline(
         Trigger::CUSTOM,
-        (new Pipeline("migrate"))
+        (new Pipeline("force-redeploy"))
+            ->withVariables($environments)
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep($compileAndDeploy("spartafyapp/"))
+            ->withStep($compileAndDeploy('$Environment', false, true))
     )
     ->withPipelines(
         Trigger::BRANCH,
         (new Pipeline(Branch::FEATURE))
-            ->withStep($unitTests)
             ->withStep($compileAndDeploy("spartafyfeature/", true)),
         (new Pipeline(Branch::HOTFIX))
-            ->withStep($unitTests)
             ->withStep($analyze)
+            ->withStep($unitTests)
             ->withStep($compileAndDeploy("spartafyhotfix/")),
         (new Pipeline(Branch::MASTER))
-            ->withStep($unitTests)
             ->withStep($analyze)
+            ->withStep($unitTests)
             ->withStep($compileAndDeploy("spartafypreprod/"))
+            ->withManualStep($compileAndDeploy("spartafyapp/"))
     )
     ->withPipeline(
         Trigger::PR,
