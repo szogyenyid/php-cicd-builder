@@ -16,7 +16,7 @@ class Variables implements Arrayable
     }
     public function __invoke(): string
     {
-        return '$' . $this->name;
+        return '${' . $this->name . '}';
     }
     public function withAllowedValues(array $values): Variables
     {

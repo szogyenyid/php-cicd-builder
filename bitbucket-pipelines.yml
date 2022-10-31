@@ -42,7 +42,7 @@ pipelines:
             - echo "!/vendor/" >> .git-ftp-include;
             - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp && chmod 755 /bin/git-ftp
             - git submodule update --init --recursive
-            - git ftp push --auto-init --force -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/$Environment
+            - git ftp push --auto-init --force -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/${Environment}
   branches:
     'feature/*':
       - step:
