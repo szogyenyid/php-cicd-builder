@@ -14,6 +14,10 @@ class Variables implements Arrayable
     {
         $this->name = $name;
     }
+    public function getNameAsVariable(): string
+    {
+        return '$' . $this->name;
+    }
     public function withAllowedValues(array $values): Variables
     {
         if (!is_null($this->default) && !in_array($this->default, $values)) {
