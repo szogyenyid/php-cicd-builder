@@ -53,7 +53,7 @@ final class CICD
     public function writeToFile(string $path): void
     {
         $this->prepareArray();
-        $yml = Yaml::dump($this->finalYmlArray, 10, 2);
+        $yml = Yaml::dump($this->finalYmlArray, 20, 2);
         // Remove unnecessary newlines
         $yml = preg_replace('/\-\n\s+/', '- ', $yml);
         $yml = preg_replace("/- '(.+?)'/", "- $1", $yml);
