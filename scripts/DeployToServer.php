@@ -19,7 +19,8 @@ class DeployToServer extends Script
         $this->addInitCommand('apk add make');
         $this->addInitCommand('apk add openssh');
         # Source: https://github.com/dotsunited/docker-git-ftp/blob/master/Dockerfile
-        $this->addInitCommand('git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp
+        $this->addInitCommand('
+            git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp
             && cd /opt/git-ftp
             && tag="$(git tag | grep \'^[0-9]*\.[0-9]*\.[0-9]*$\' | tail -1)"
             && git checkout "$tag"

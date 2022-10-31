@@ -17,7 +17,7 @@ use Soegaeni\PhpCicdBuilder\Step;
 
 include 'vendor/autoload.php';
 
-# --- Steps ---
+# --- Default steps ---
 
 $analyze = (new Step("Static Analysis & Coding standards"))
     ->withScript(new PHPSyntaxCheck())
@@ -27,17 +27,13 @@ $analyze = (new Step("Static Analysis & Coding standards"))
 $unitTests = (new Step("Unit tests"))
     ->withScript(new PHPUnit());
 
-$compileAssets = (new Step("Compile and Deploy"))
-    ->withScript(new MinifyJS())
-    ->withScript(new CompileSCSS());
-
-function stepWithDeploy(Step $step, ...$params): Step
-{
-    $s = clone $step;
-    return $s
+$compileAndDeploy = function (...$params): Step {
+    return (new Step("Compile and Deploy"))
+        ->withScript(new MinifyJS())
+        ->withScript(new CompileSCSS())
         ->withScript(new ComposerInstall())
         ->withScript(new DeployToServer(...$params));
-}
+};
 
 # --- Build the CI/CD process from this point ---
 
@@ -48,21 +44,21 @@ $cicd = (new CICD("alpine:latest"))
         (new Pipeline("migrate"))
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep(stepWithDeploy($compileAssets, "spartafyapp/"))
+            ->withStep($compileAndDeploy("spartafyapp/"))
     )
     ->withPipelines(
         Trigger::BRANCH,
         (new Pipeline(Branch::FEATURE))
             ->withStep($unitTests)
-            ->withStep(stepWithDeploy($compileAssets, "spartafyfeature/", true)),
+            ->withStep($compileAndDeploy("spartafyfeature/", true)),
         (new Pipeline(Branch::HOTFIX))
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep(stepWithDeploy($compileAssets, "spartafyhotfix/")),
+            ->withStep($compileAndDeploy("spartafyhotfix/")),
         (new Pipeline(Branch::MASTER))
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep(stepWithDeploy($compileAssets, "spartafypreprod/"))
+            ->withStep($compileAndDeploy("spartafypreprod/"))
     )
     ->withPipeline(
         Trigger::PR,
