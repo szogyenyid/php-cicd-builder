@@ -6,6 +6,7 @@ pipelines:
           name: 'Unit tests'
           script:
             - apk update && apk upgrade
+            - apk add php8
             - wget https://phar.phpunit.de/phpunit-9.5.phar
             - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
       - step:
@@ -22,33 +23,40 @@ pipelines:
           name: 'Compile and Deploy'
           script:
             - apk update && apk upgrade
-            - apk add nodejs npm bash curl git make openssh
+            - apk add nodejs npm php8 bash curl git make openssh
             - npm install uglify-js -g
             - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
             - npm install -g sass
             - sass --update assets:public --style=compressed
             - echo "!/public/" >> .git-ftp-include;
+            - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
+            - php composer.phar install
+            - echo "!/vendor/" >> .git-ftp-include;
             - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
             - git submodule update --init --recursive
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafy.hu/spartafy/
-  branch:
+  branches:
     'feature/*':
       - step:
           name: 'Unit tests'
           script:
             - apk update && apk upgrade
+            - apk add php8
             - wget https://phar.phpunit.de/phpunit-9.5.phar
             - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
       - step:
           name: 'Compile and Deploy'
           script:
             - apk update && apk upgrade
-            - apk add nodejs npm bash curl git make openssh
+            - apk add nodejs npm php8 bash curl git make openssh
             - npm install uglify-js -g
             - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
             - npm install -g sass
             - sass --update assets:public --style=compressed
             - echo "!/public/" >> .git-ftp-include;
+            - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
+            - php composer.phar install
+            - echo "!/vendor/" >> .git-ftp-include;
             - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
             - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/'' -f2)'
             - git submodule update --init --recursive
@@ -58,6 +66,7 @@ pipelines:
           name: 'Unit tests'
           script:
             - apk update && apk upgrade
+            - apk add php8
             - wget https://phar.phpunit.de/phpunit-9.5.phar
             - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
       - step:
@@ -74,12 +83,15 @@ pipelines:
           name: 'Compile and Deploy'
           script:
             - apk update && apk upgrade
-            - apk add nodejs npm bash curl git make openssh
+            - apk add nodejs npm php8 bash curl git make openssh
             - npm install uglify-js -g
             - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
             - npm install -g sass
             - sass --update assets:public --style=compressed
             - echo "!/public/" >> .git-ftp-include;
+            - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
+            - php composer.phar install
+            - echo "!/vendor/" >> .git-ftp-include;
             - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
             - git submodule update --init --recursive
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyhotfix/
@@ -88,6 +100,7 @@ pipelines:
           name: 'Unit tests'
           script:
             - apk update && apk upgrade
+            - apk add php8
             - wget https://phar.phpunit.de/phpunit-9.5.phar
             - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
       - step:
@@ -104,12 +117,15 @@ pipelines:
           name: 'Compile and Deploy'
           script:
             - apk update && apk upgrade
-            - apk add nodejs npm bash curl git make openssh
+            - apk add nodejs npm php8 bash curl git make openssh
             - npm install uglify-js -g
             - for f in $(find assets -maxdepth 30 -type f -name '*.js'' -and -not -name ''*.min.js''); do to=".min.js"; filename=${f/.js/$to}; uglifyjs --compress --mangle -- "$f" > $filename; echo "!${filename}" >> .git-ftp-include; done'
             - npm install -g sass
             - sass --update assets:public --style=compressed
             - echo "!/public/" >> .git-ftp-include;
+            - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
+            - php composer.phar install
+            - echo "!/vendor/" >> .git-ftp-include;
             - git clone https://github.com/git-ftp/git-ftp.git /opt/git-ftp && cd /opt/git-ftp && tag="$(git tag | grep '^[0-9]*\.[0-9]*\.[0-9]*$'' | tail -1)" && git checkout "$tag" && make install && rm -rf /opt/git-ftp'
             - git submodule update --init --recursive
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafypreprod/
@@ -119,6 +135,7 @@ pipelines:
           name: 'Unit tests'
           script:
             - apk update && apk upgrade
+            - apk add php8
             - wget https://phar.phpunit.de/phpunit-9.5.phar
             - php phpunit-9.5.phar --no-configuration --bootstrap vendor/autoload.php tests
       - step:

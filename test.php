@@ -2,6 +2,7 @@
 
 use MyProject\CICD\CodingStandard;
 use MyProject\CICD\CompileSCSS;
+use MyProject\CICD\ComposerInstall;
 use MyProject\CICD\DeployToServer;
 use MyProject\CICD\MinifyJS;
 use MyProject\CICD\PHPStan;
@@ -33,7 +34,9 @@ $compileAssets = (new Step("Compile and Deploy"))
 function stepWithDeploy(Step $step, ...$params): Step
 {
     $s = clone $step;
-    return $s->withScript(new DeployToServer(...$params));
+    return $s
+        ->withScript(new ComposerInstall())
+        ->withScript(new DeployToServer(...$params));
 }
 
 # --- Build the CI/CD process from this point ---
@@ -45,23 +48,17 @@ $cicd = (new CICD("alpine:latest"))
         (new Pipeline("migrate"))
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep(stepWithDeploy($compileAssets, "spartafy.hu/spartafy/"))
+            ->withStep(stepWithDeploy($compileAssets, "spartafyapp/"))
     )
-    ->withPipeline(
+    ->withPipelines(
         Trigger::BRANCH,
         (new Pipeline(Branch::FEATURE))
             ->withStep($unitTests)
-            ->withStep(stepWithDeploy($compileAssets, "spartafyfeature/", true))
-    )
-    ->withPipeline(
-        Trigger::BRANCH,
+            ->withStep(stepWithDeploy($compileAssets, "spartafyfeature/", true)),
         (new Pipeline(Branch::HOTFIX))
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep(stepWithDeploy($compileAssets, "spartafyhotfix/"))
-    )
-    ->withPipeline(
-        Trigger::BRANCH,
+            ->withStep(stepWithDeploy($compileAssets, "spartafyhotfix/")),
         (new Pipeline(Branch::MASTER))
             ->withStep($unitTests)
             ->withStep($analyze)
@@ -69,7 +66,7 @@ $cicd = (new CICD("alpine:latest"))
     )
     ->withPipeline(
         Trigger::PR,
-        (new Pipeline(Branch::DEFAULT))
+        (new Pipeline(Branch::ANY))
             ->withStep($unitTests)
             ->withStep($analyze)
     )
