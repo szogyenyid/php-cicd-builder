@@ -52,7 +52,7 @@ $cicd = (new CICD("alpine:latest"))
             ->withVariables($environments)
             ->withStep($unitTests)
             ->withStep($analyze)
-            ->withStep($compileAndDeploy($environments->getNameAsVariable(), false, true))
+            ->withStep($compileAndDeploy($environments(), false, true))
     )
     ->withPipelines(
         Trigger::BRANCH,

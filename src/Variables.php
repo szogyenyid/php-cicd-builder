@@ -14,7 +14,7 @@ class Variables implements Arrayable
     {
         $this->name = $name;
     }
-    public function getNameAsVariable(): string
+    public function __invoke(): string
     {
         return '$' . $this->name;
     }
