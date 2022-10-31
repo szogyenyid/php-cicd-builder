@@ -14,7 +14,7 @@ class MinifyJS extends Script
     ) {
         $this->addInitCommand("apk add nodejs");
         $this->addInitCommand("apk add npm");
-        if (isset($$outputFolder)) {
+        if (isset($outputFolder)) {
             $this->addInitCommand('npm install uglifyjs-folder -g');
             $this->addCommand('uglifyjs-folder ' . $inputFolder . ' -eo ' . $outputFolder);
             $this->addCommand('echo "' . $outputFolder . '/*" >> .git-ftp-include');
