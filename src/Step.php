@@ -2,11 +2,14 @@
 
 namespace Soegaeni\PhpCicdBuilder;
 
-final class Step
+use Soegaeni\PhpCicdBuilder\Interfaces\Arrayable;
+
+final class Step implements Arrayable
 {
     private $name;
     private $scripts = array();
     private $initScripts = array();
+    private $isManual = false;
 
     public function __construct(string $name = "")
     {
@@ -22,10 +25,18 @@ final class Step
         array_push($this->initScripts, $script);
         return $this;
     }
+    public function withManualTrigger(bool $manual): Step
+    {
+        $this->isManual = $manual;
+        return $this;
+    }
     public function asArray(): array
     {
         $step = array();
         $step['name'] = $this->name;
+        if ($this->isManual) {
+            $step['trigger'] = 'manual';
+        }
         $step['script'] = array();
         $stepInits = array();
         $apkAdds = array();
