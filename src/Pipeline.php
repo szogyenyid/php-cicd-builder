@@ -3,6 +3,7 @@
 namespace Soegaeni\PhpCicdBuilder;
 
 use Soegaeni\PhpCicdBuilder\Interfaces\Arrayable;
+use Soegaeni\PhpCicdBuilder\Interfaces\ProviderStrategy;
 
 final class Pipeline implements Arrayable
 {
@@ -38,15 +39,8 @@ final class Pipeline implements Arrayable
     {
         return $this->steps;
     }
-    public function asArray(): array
+    public function toArray(ProviderStrategy &$strategy): array
     {
-        $pipeline = array();
-        foreach ($this->variables as $var) {
-            array_push($pipeline, array("variables" => $var->asArray()));
-        }
-        foreach ($this->steps as $step) {
-            array_push($pipeline, array("step" => $step->asArray()));
-        }
-        return $pipeline;
+        return $strategy->pipelineToArray($this->variables, $this->steps);
     }
 }

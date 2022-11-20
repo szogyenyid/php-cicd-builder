@@ -4,5 +4,5 @@ namespace Soegaeni\PhpCicdBuilder\Interfaces;
 
 interface Arrayable
 {
-    public function asArray(): array;
+    public function toArray(ProviderStrategy &$strategy): array;
 }

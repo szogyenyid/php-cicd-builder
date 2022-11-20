@@ -2,21 +2,24 @@
 
 namespace Soegaeni\PhpCicdBuilder;
 
+use Soegaeni\PhpCicdBuilder\Interfaces\ProviderStrategy;
 use Soegaeni\PhpCicdBuilder\Script;
 use Symfony\Component\Yaml\Yaml;
 
 final class CICD
 {
-    private $image;
-    private $pipelines = array();
-    private $initScripts = array();
-    private $finalYmlArray = array();
+    private string $image;
+    private ProviderStrategy $providerStrategy;
+    private array $pipelines = array();
+    private array $initScripts = array();
+    private array $finalYmlArray = array();
 
-    public function __construct(string $dockerImage)
+    public function __construct(string $dockerImage, ProviderStrategy $providerStrategy)
     {
         $this->image = $dockerImage;
+        $this->providerStrategy = $providerStrategy;
     }
-    public function withPipeline(string $trigger, Pipeline $pipeline): CICD
+    public function withPipeline(string $trigger, Pipeline &$pipeline): CICD
     {
         if (!isset($this->pipelines[$trigger])) {
             $this->pipelines[$trigger] = array();
@@ -26,7 +29,7 @@ final class CICD
                 $step->withInitScript($is);
             }
         }
-        $this->pipelines[$trigger][$pipeline->getName()] = $pipeline->asArray();
+        $this->pipelines[$trigger][$pipeline->getName()] = $pipeline->toArray($this->providerStrategy);
         return $this;
     }
     public function withPipelines(string $trigger, ...$pipelines): CICD
@@ -45,14 +48,10 @@ final class CICD
         $this->initScripts[] = $script;
         return $this;
     }
-    private function prepareArray()
+    public function writeToFile(string $path): void
     {
         $this->finalYmlArray['image'] = $this->image;
         $this->finalYmlArray['pipelines'] = $this->pipelines;
-    }
-    public function writeToFile(string $path): void
-    {
-        $this->prepareArray();
         $yml = Yaml::dump($this->finalYmlArray, 20, 2);
         // Remove unnecessary newlines
         $yml = preg_replace('/\-\n\s+/', '- ', $yml);

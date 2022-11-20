@@ -3,6 +3,7 @@
 namespace Soegaeni\PhpCicdBuilder;
 
 use Soegaeni\PhpCicdBuilder\Interfaces\Arrayable;
+use Soegaeni\PhpCicdBuilder\Interfaces\ProviderStrategy;
 
 class Variables implements Arrayable
 {
@@ -34,16 +35,8 @@ class Variables implements Arrayable
         $this->default = $default;
         return $this;
     }
-    public function asArray(): array
+    public function toArray(ProviderStrategy &$strategy): array
     {
-        $variables = array();
-        $variables['name'] = $this->name;
-        if (!is_null($this->default)) {
-            $variables['default'] = $this->default;
-        }
-        if (!is_null($this->allowedValues)) {
-            $variables['allowed-values'] = $this->allowedValues;
-        }
-        return $variables;
+        return $strategy->variablesToArray($this->name, $this->default, $this->allowedValues);
     }
 }

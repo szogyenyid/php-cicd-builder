@@ -14,6 +14,7 @@ use Soegaeni\PhpCicdBuilder\Constants\Trigger;
 use Soegaeni\PhpCicdBuilder\Pipeline;
 use Soegaeni\PhpCicdBuilder\Script;
 use Soegaeni\PhpCicdBuilder\Step;
+use Soegaeni\PhpCicdBuilder\Strategies\Bitbucket;
 use Soegaeni\PhpCicdBuilder\Variables;
 
 include 'vendor/autoload.php';
@@ -42,9 +43,9 @@ $compileAndDeploy = function (...$params): Step {
         ->withScript(new DeployToServer(...$params));
 };
 
-# --- Build the CI/CD process from this point ---
+# --- Build the CI/CD process from this point ----
 
-(new CICD("alpine:latest"))
+(new CICD("alpine:latest", new Bitbucket()))
     ->withInitScript(Script::simple("apk update && apk upgrade"))
     ->withPipeline(
         Trigger::CUSTOM,
