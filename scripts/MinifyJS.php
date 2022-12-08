@@ -17,7 +17,9 @@ class MinifyJS extends Script
         if (isset($outputFolder)) {
             $this->addInitCommand('npm install uglifyjs-folder -g');
             $this->addCommand('uglifyjs-folder ' . $inputFolder . ' -eo ' . $outputFolder);
-            $this->addCommand('echo "' . $outputFolder . '/*" >> .git-ftp-include');
+            if ($addToGitFtpInclude) {
+                $this->addCommand('echo "' . $outputFolder . '/*" >> .git-ftp-include');
+            }
         } else {
             $this->addInitCommand("npm install uglify-js -g");
             $this->addCommand('
