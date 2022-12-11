@@ -18,14 +18,12 @@ class DeployToServer extends Script
         $this->addInitCommand('apk add curl');
         $this->addInitCommand('apk add git');
         $this->addInitCommand('apk add openssh');
-        $this->addInitCommand('
-            curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp
-            && chmod 755 /bin/git-ftp
-        ');
         if ($appendFeatureBranchName) {
             $this->addInitCommand('featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d \'/\' -f2)');
         }
         $this->addInitCommand('git submodule update --init --recursive');
+        $this->addCommand('curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp');
+        $this->addCommand('chmod 755 /bin/git-ftp');
         $this->addCommand('
             git ftp push
             --auto-init
