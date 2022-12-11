@@ -40,8 +40,9 @@ pipelines:
             - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
             - php composer.phar install
             - echo "!/vendor/" >> .git-ftp-include;
-            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp && chmod 755 /bin/git-ftp
             - git submodule update --init --recursive
+            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp
+            - chmod 755 /bin/git-ftp
             - git ftp push --auto-init --force -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/${Environment}
   branches:
     'feature/*':
@@ -58,9 +59,10 @@ pipelines:
             - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
             - php composer.phar install
             - echo "!/vendor/" >> .git-ftp-include;
-            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp && chmod 755 /bin/git-ftp
             - featureBranchName=$(echo $BITBUCKET_BRANCH | cut -d '/'' -f2)'
             - git submodule update --init --recursive
+            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp
+            - chmod 755 /bin/git-ftp
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyfeature/${featureBranchName}/
     hotfix:
       - step:
@@ -93,8 +95,9 @@ pipelines:
             - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
             - php composer.phar install
             - echo "!/vendor/" >> .git-ftp-include;
-            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp && chmod 755 /bin/git-ftp
             - git submodule update --init --recursive
+            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp
+            - chmod 755 /bin/git-ftp
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyhotfix/
     master:
       - step:
@@ -127,8 +130,9 @@ pipelines:
             - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
             - php composer.phar install
             - echo "!/vendor/" >> .git-ftp-include;
-            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp && chmod 755 /bin/git-ftp
             - git submodule update --init --recursive
+            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp
+            - chmod 755 /bin/git-ftp
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafypreprod/
       - step:
           name: 'Compile and Deploy'
@@ -144,8 +148,9 @@ pipelines:
             - wget https://github.com/composer/composer/releases/download/2.4.4/composer.phar
             - php composer.phar install
             - echo "!/vendor/" >> .git-ftp-include;
-            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp && chmod 755 /bin/git-ftp
             - git submodule update --init --recursive
+            - curl https://raw.githubusercontent.com/git-ftp/git-ftp/master/git-ftp > /bin/git-ftp
+            - chmod 755 /bin/git-ftp
             - git ftp push --auto-init -u "$FTP_USERNAME" -p "$FTP_PASSWORD" ftp://$FTP_HOST/spartafyapp/
   pull-requests:
     '**':
