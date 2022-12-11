@@ -76,3 +76,4 @@ $compileAndDeploy = function (...$params): Step {
             ->withStep($analyze)
     )
     ->writeToFile("bitbucket-pipelines.yml");
+echo "YAML generated.\n";

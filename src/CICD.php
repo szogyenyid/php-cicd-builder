@@ -18,7 +18,7 @@ final class CICD
         $this->image = $dockerImage;
         $this->providerStrategy = $providerStrategy;
     }
-    public function withPipeline(string $trigger, Pipeline &$pipeline): CICD
+    public function withPipeline(string $trigger, Pipeline $pipeline): CICD
     {
         if (!isset($this->pipelines[$trigger])) {
             $this->pipelines[$trigger] = array();
