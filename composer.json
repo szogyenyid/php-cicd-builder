@@ -2,6 +2,7 @@
     "name": "szogyenyid/php-cicd-builder",
     "description": "A tool to generate YAML files for BitBucket Pipelines based on a PHP fluent interface command chain.",
     "type": "library",
+    "license": "MIT",
     "require": {
         "php": ">=8.0",
         "symfony/yaml": "v6.0.3"
