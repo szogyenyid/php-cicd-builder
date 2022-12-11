@@ -52,7 +52,7 @@ final class CICD
         $finalYmlArray = array();
         $finalYmlArray['image'] = $this->image;
         $finalYmlArray['pipelines'] = $this->pipelines;
-        $yml = Yaml::dump($this->finalYmlArray, 20, 2);
+        $yml = Yaml::dump($finalYmlArray, 20, 2);
         // Remove unnecessary newlines
         $yml = preg_replace('/\-\n\s+/', '- ', $yml);
         $yml = preg_replace("/- '(.+?)'/", "- $1", $yml);

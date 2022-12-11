@@ -7,6 +7,9 @@ class Script
     protected $initCommands = array();
     protected $commands = array();
 
+    private function __construct()
+    {
+    }
     public function addInitCommand(string $command): Script
     {
         $singleLine = trim(preg_replace('/\s+/', ' ', $command));
