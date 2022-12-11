@@ -1,6 +1,6 @@
 <?php
 
-namespace Soegaeni\PhpCicdBuilder\Interfaces;
+namespace szogyenyid\PhpCicdBuilder\Interfaces;
 
 interface Arrayable
 {

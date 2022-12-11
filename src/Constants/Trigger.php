@@ -1,6 +1,6 @@
 <?php
 
-namespace Soegaeni\PhpCicdBuilder\Constants;
+namespace szogyenyid\PhpCicdBuilder\Constants;
 
 class Trigger
 {

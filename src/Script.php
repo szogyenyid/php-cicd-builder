@@ -1,6 +1,6 @@
 <?php
 
-namespace Soegaeni\PhpCicdBuilder;
+namespace szogyenyid\PhpCicdBuilder;
 
 class Script
 {

@@ -8,13 +8,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Soegaeni\\PhpCicdBuilder\\": "src/",
+            "szogyenyid\\PhpCicdBuilder\\": "src/",
             "MyProject\\CICD\\": "scripts/"
         }
     },
     "authors": [
         {
-            "name": "soegaeni",
+            "name": "szogyenyid",
             "email": "szogyenyid@gmail.com"
         }
     ]

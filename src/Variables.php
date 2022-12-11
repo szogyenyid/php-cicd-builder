@@ -1,9 +1,9 @@
 <?php
 
-namespace Soegaeni\PhpCicdBuilder;
+namespace szogyenyid\PhpCicdBuilder;
 
-use Soegaeni\PhpCicdBuilder\Interfaces\Arrayable;
-use Soegaeni\PhpCicdBuilder\Interfaces\ProviderStrategy;
+use szogyenyid\PhpCicdBuilder\Interfaces\Arrayable;
+use szogyenyid\PhpCicdBuilder\Interfaces\ProviderStrategy;
 
 class Variables implements Arrayable
 {

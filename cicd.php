@@ -8,14 +8,14 @@ use MyProject\CICD\MinifyJS;
 use MyProject\CICD\PHPStan;
 use MyProject\CICD\PHPSyntaxCheck;
 use MyProject\CICD\PHPUnit;
-use Soegaeni\PhpCicdBuilder\CICD;
-use Soegaeni\PhpCicdBuilder\Constants\Branch;
-use Soegaeni\PhpCicdBuilder\Constants\Trigger;
-use Soegaeni\PhpCicdBuilder\Pipeline;
-use Soegaeni\PhpCicdBuilder\Script;
-use Soegaeni\PhpCicdBuilder\Step;
-use Soegaeni\PhpCicdBuilder\Strategies\Bitbucket;
-use Soegaeni\PhpCicdBuilder\Variables;
+use szogyenyid\PhpCicdBuilder\CICD;
+use szogyenyid\PhpCicdBuilder\Constants\Branch;
+use szogyenyid\PhpCicdBuilder\Constants\Trigger;
+use szogyenyid\PhpCicdBuilder\Pipeline;
+use szogyenyid\PhpCicdBuilder\Script;
+use szogyenyid\PhpCicdBuilder\Step;
+use szogyenyid\PhpCicdBuilder\Strategies\Bitbucket;
+use szogyenyid\PhpCicdBuilder\Variables;
 
 include 'vendor/autoload.php';
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Soegaeni\PhpCicdBuilder;
+namespace szogyenyid\PhpCicdBuilder;
 
-use Soegaeni\PhpCicdBuilder\Interfaces\ProviderStrategy;
-use Soegaeni\PhpCicdBuilder\Script;
+use szogyenyid\PhpCicdBuilder\Interfaces\ProviderStrategy;
+use szogyenyid\PhpCicdBuilder\Script;
 use Symfony\Component\Yaml\Yaml;
 
 final class CICD

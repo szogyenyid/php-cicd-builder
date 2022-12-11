@@ -2,7 +2,7 @@
 
 namespace MyProject\CICD;
 
-use Soegaeni\PhpCicdBuilder\Script;
+use szogyenyid\PhpCicdBuilder\Script;
 
 class PHPUnit extends Script
 {

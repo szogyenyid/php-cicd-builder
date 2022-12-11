@@ -1,9 +1,9 @@
 <?php
 
-namespace Soegaeni\PhpCicdBuilder\Strategies;
+namespace szogyenyid\PhpCicdBuilder\Strategies;
 
-use Soegaeni\PhpCicdBuilder\Constants\Trigger;
-use Soegaeni\PhpCicdBuilder\Interfaces\ProviderStrategy;
+use szogyenyid\PhpCicdBuilder\Constants\Trigger;
+use szogyenyid\PhpCicdBuilder\Interfaces\ProviderStrategy;
 
 class Bitbucket implements ProviderStrategy
 {
