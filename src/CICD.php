@@ -12,7 +12,6 @@ final class CICD
     private ProviderStrategy $providerStrategy;
     private array $pipelines = array();
     private array $initScripts = array();
-    private array $finalYmlArray = array();
 
     public function __construct(string $dockerImage, ProviderStrategy $providerStrategy)
     {
@@ -50,8 +49,9 @@ final class CICD
     }
     public function writeToFile(string $path): void
     {
-        $this->finalYmlArray['image'] = $this->image;
-        $this->finalYmlArray['pipelines'] = $this->pipelines;
+        $finalYmlArray = array();
+        $finalYmlArray['image'] = $this->image;
+        $finalYmlArray['pipelines'] = $this->pipelines;
         $yml = Yaml::dump($this->finalYmlArray, 20, 2);
         // Remove unnecessary newlines
         $yml = preg_replace('/\-\n\s+/', '- ', $yml);
