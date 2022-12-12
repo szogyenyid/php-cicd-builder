@@ -11,7 +11,7 @@ class Bitbucket implements ProviderStrategy
     {
         $pipeline = array();
         foreach ($variables as $var) {
-            array_push($pipeline, array("variables" => $var->toArray($this)));
+            array_push($pipeline, array("variables" => array($var->toArray($this))));
         }
         foreach ($steps as $step) {
             array_push($pipeline, array("step" => $step->toArray($this)));
