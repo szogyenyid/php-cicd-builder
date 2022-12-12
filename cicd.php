@@ -1,13 +1,13 @@
 <?php
 
-use MyProject\CICD\CodingStandard;
-use MyProject\CICD\CompileSCSS;
-use MyProject\CICD\ComposerInstall;
-use MyProject\CICD\DeployToServer;
-use MyProject\CICD\MinifyJS;
-use MyProject\CICD\PHPStan;
-use MyProject\CICD\PHPSyntaxCheck;
-use MyProject\CICD\PHPUnit;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\CodingStandard;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\CompileSCSS;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\ComposerInstall;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\DeployToServer;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\MinifyJS;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\PHPStan;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\PHPSyntaxCheck;
+use szogyenyid\PhpCicdBuilder\ExampleScripts\PHPUnit;
 use szogyenyid\PhpCicdBuilder\CICD;
 use szogyenyid\PhpCicdBuilder\Constants\Branch;
 use szogyenyid\PhpCicdBuilder\Constants\Trigger;

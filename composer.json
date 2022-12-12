@@ -10,7 +10,7 @@
     "autoload": {
         "psr-4": {
             "szogyenyid\\PhpCicdBuilder\\": "src/",
-            "MyProject\\CICD\\": "scripts/"
+            "szogyenyid\\PhpCicdBuilder\\ExampleScripts\\": "scripts/"
         }
     },
     "authors": [

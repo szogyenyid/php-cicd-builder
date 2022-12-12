@@ -1,6 +1,6 @@
 <?php
 
-namespace MyProject\CICD;
+namespace szogyenyid\PhpCicdBuilder\ExampleScripts;
 
 use szogyenyid\PhpCicdBuilder\Script;
 
