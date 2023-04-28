@@ -11,10 +11,16 @@ final class Step implements Arrayable
     private $scripts = array();
     private $initScripts = array();
     private $isManual = false;
+    private $deployment = null;
 
     public function __construct(string $name = "")
     {
         $this->name = $name;
+    }
+    public function withDeployment(string $deployment): Step
+    {
+        $this->deployment = $deployment;
+        return $this;
     }
     public function withScript(Script $script): Step
     {
@@ -35,6 +41,7 @@ final class Step implements Arrayable
     {
         return $strategy->stepToArray(
             $this->name,
+            $this->deployment,
             $this->isManual,
             $this->initScripts,
             $this->scripts
