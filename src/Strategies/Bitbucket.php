@@ -18,7 +18,7 @@ class Bitbucket implements ProviderStrategy
         }
         return $pipeline;
     }
-    public function stepToArray(string $name, string $deployment, bool $isManual, array &$initScripts, array &$scripts): array
+    public function stepToArray(string $name, ?string $deployment, bool $isManual, array &$initScripts, array &$scripts): array
     {
         $step = array();
         $step['name'] = $name;

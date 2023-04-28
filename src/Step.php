@@ -17,7 +17,7 @@ final class Step implements Arrayable
     {
         $this->name = $name;
     }
-    public function withDeployment(string $deployment): Step
+    public function withDeployment(?string $deployment): Step
     {
         $this->deployment = $deployment;
         return $this;
